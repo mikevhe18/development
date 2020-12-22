@@ -22,7 +22,7 @@
                 <header>
                     <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>
                     <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible':[('state','!=','open')]}"/>
-                    <button name="action_cancel" type="object" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
+                    <button name="%(ssi_cancel_reason.base_cancel_reason_wizard_action)d" type="action" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
                     <button name="request_validation"
                         string="Request Validation"
                         attrs="{'invisible': ['|','|',('need_validation', '!=', True),('rejected','=',True),('state','not in',['confirm'])]}"
@@ -70,12 +70,25 @@
 
                 <div name="div_smart_buttons" class="oe_right oe_button_box">
                 </div>
+                <div class="oe_left" style="width: 500px;">
+                    <div class="oe_title" style="width: 500px;">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <h2 attrs="{'invisible': [('state', '!=', 'cancel')]}">
+                            <label for="reason" string="Cancellation reason:"/>
+                            <field name="reason" class="oe_inline" widget="text"/>
+                        </h2>
+                    </div>
+                </div>
 
                 <group>
                     <group name="left">
-                        <field name="name" />
+                        <field name="model_type_id" />
                     </group>
                     <group name="right">
+                        <field name="date" />
                         <field name="active" />
                     </group>
                 </group>
@@ -111,7 +124,7 @@
     </record>
 
     <menuitem
-        id="menu_tier_definition"
+        id="menu_dev_model"
         parent="menu_dev_root"
         action="dev_model_view_action"
     />

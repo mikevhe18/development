@@ -11,6 +11,8 @@ class DevModel(models.Model):
     _description = "Development Model"
     _inherit = [
         "tier.validation.mixin",
+        "sequence.configurator.mixin",
+        "cancel.reason.mixin",
         "mail.thread",
     ]
     _state_from = [
@@ -23,7 +25,20 @@ class DevModel(models.Model):
 
     name = fields.Char(
         string="# Document",
+        default="/",
         required=True,
+    )
+    model_type_id = fields.Many2one(
+        string="Type",
+        comodel_name="dev.model.type",
+    )
+    date = fields.Date(
+        string='Date',
+        index=True,
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+        copy=False,
+        default=fields.Date.context_today
     )
     active = fields.Boolean(
         string="Active",
@@ -43,6 +58,16 @@ class DevModel(models.Model):
         ],
         default="draft",
     )
+
+    @api.model
+    def create(self, values):
+        _super = super(DevModel, self)
+        result = _super.create(values)
+        sequence = result._create_sequence()
+        result.write({
+            "name": sequence,
+        })
+        return result
 
     def action_confirm(self):
         for document in self:
