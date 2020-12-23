@@ -12,7 +12,8 @@ class DevModel(models.Model):
     _inherit = [
         "tier.validation.mixin",
         "sequence.configurator.mixin",
-        "cancel.reason.mixin",
+        "cancel.state.mixin",
+        "terminate.state.mixin",
         "mail.thread",
     ]
     _state_from = [
@@ -55,6 +56,7 @@ class DevModel(models.Model):
             ("open", "On Progress"),
             ("done", "Finished"),
             ("cancel", "Cancelled"),
+            ("terminate", "Terminated"),
         ],
         default="draft",
     )
@@ -81,11 +83,6 @@ class DevModel(models.Model):
     def action_done(self):
         for document in self:
             document.write({"state": "done"})
-
-    def action_cancel(self):
-        for document in self:
-            document.write({"state": "cancel"})
-            document.restart_validation()
 
     def validate_tier(self):
         _super = super(DevModel, self)

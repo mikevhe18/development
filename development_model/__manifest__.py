@@ -13,13 +13,15 @@
     "depends": [
         "ssi_multiple_approval",
         "ssi_sequence_configurator",
-        "ssi_cancel_reason",
+        "ssi_cancel_state",
+        "ssi_terminate_state",
     ],
     "data": [
         "security/ir.model.access.csv",
         "data/ir_sequence_data.xml",
         "data/base_sequence_configurator_data.xml",
         "data/base_cancel_reason_configurator_data.xml",
+        "data/base_terminate_reason_configurator_data.xml",
         "menu.xml",
         "views/dev_model_view.xml",
         "views/dev_model_type_view.xml",

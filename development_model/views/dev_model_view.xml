@@ -22,7 +22,8 @@
                 <header>
                     <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>
                     <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible':[('state','!=','open')]}"/>
-                    <button name="%(ssi_cancel_reason.base_cancel_reason_wizard_action)d" type="action" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
+                    <button name="%(ssi_cancel_state.base_cancel_reason_wizard_action)d" type="action" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
+                    <button name="%(ssi_terminate_state.base_terminate_reason_wizard_action)d" type="action" string="Terminate" class="oe_highlight" attrs="{'invisible':[('state','=','terminate')]}"/>
                     <button name="request_validation"
                         string="Request Validation"
                         attrs="{'invisible': ['|','|',('need_validation', '!=', True),('rejected','=',True),('state','not in',['confirm'])]}"
@@ -79,6 +80,10 @@
                         <h2 attrs="{'invisible': [('state', '!=', 'cancel')]}">
                             <label for="reason" string="Cancellation reason:"/>
                             <field name="reason" class="oe_inline" widget="text"/>
+                        </h2>
+                        <h2 attrs="{'invisible': [('state', '!=', 'terminate')]}">
+                            <label for="terminate_reason" string="Termination reason:"/>
+                            <field name="terminate_reason" class="oe_inline" widget="text"/>
                         </h2>
                     </div>
                 </div>
