@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2021 OpenSynergy Indonesia
+     Copyright 2021 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<openerp>
+    <data>
+
+    <record id="dev_model_view_tree" model="ir.ui.view">
+        <field name="name">dev.model.tree</field>
+        <field name="model">dev.model</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="active" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="dev_model_view_form" model="ir.ui.view">
+        <field name="name">dev.model.form</field>
+        <field name="model">dev.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>
+                    <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible':[('state','!=','open')]}"/>
+                    <button name="%(ssi_cancel_state.base_cancel_reason_wizard_action)d" type="action" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
+                    <button name="%(ssi_terminate_state.base_terminate_reason_wizard_action)d" type="action" string="Terminate" class="oe_highlight" attrs="{'invisible':[('state','=','terminate')]}"/>
+                    <button name="request_validation"
+                        string="Request Validation"
+                        attrs="{'invisible': ['|','|',('need_validation', '!=', True),('rejected','=',True),('state','not in',['confirm'])]}"
+                        type="object"/>
+                    <button name="restart_validation"
+                        string="Restart Validation"
+                        attrs="{'invisible': ['|','|',('review_ids', '=', []),('rejected','=',False),('state','not in',['confirm'])]}"
+                        type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,open,done"/>
+                </header>
+                <sheet>
+                <field name="need_validation" invisible="1"/>
+                <field name="validated" invisible="1"/>
+                <field name="rejected" invisible="1"/>
+                <div role="alert" class="alert alert-warning"
+                     attrs="{'invisible': ['|', '|', '|',
+                     ('validated', '=', True), ('state', 'not in', ['confirm']),
+                     ('rejected', '=', True), ('review_ids', '=', [])]}"
+                     style="margin-bottom:0px;">
+                    <p><i class="fa fa-info-circle"/>This Record needs to be
+                        validated.
+                        <button name="validate_tier"
+                            string="Validate"
+                            attrs="{'invisible': [('review_ids', '=', [])]}"
+                            type="object"
+                            class="oe_inline oe_button btn-success"
+                            icon="fa-check"/>
+                        <button name="reject_tier"
+                            string="Reject"
+                            type="object"
+                            class="btn-icon btn-danger"
+                            icon="fa-stop"/>
+                    </p>
+                </div>
+                <div role="alert" class="alert alert-success"
+                     attrs="{'invisible': ['|', '|', ('validated', '!=', True), ('state', 'not in', ['confirm']), ('review_ids', '=', [])]}"
+                     style="margin-bottom:0px;">
+                    <p><i class="fa fa-thumbs-up"/> Operation has been <b>validated</b>!</p>
+                </div>
+                <div role="alert" class="alert alert-danger"
+                     attrs="{'invisible': ['|', '|', ('rejected', '!=', True), ('state', 'not in', ['confirm']), ('review_ids', '=', [])]}"
+                     style="margin-bottom:0px;">
+                    <p><i class="fa fa-thumbs-down"/> Operation has been <b>rejected</b>.</p>
+                </div>
+
+                <div name="div_smart_buttons" class="oe_right oe_button_box">
+                </div>
+                <div class="oe_left" style="width: 500px;">
+                    <div class="oe_title" style="width: 500px;">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <h2 attrs="{'invisible': [('state', '!=', 'cancel')]}">
+                            <label for="reason" string="Cancellation reason:"/>
+                            <field name="reason" class="oe_inline" widget="text"/>
+                        </h2>
+                        <h2 attrs="{'invisible': [('state', '!=', 'terminate')]}">
+                            <label for="terminate_reason" string="Termination reason:"/>
+                            <field name="terminate_reason" class="oe_inline" widget="text"/>
+                        </h2>
+                    </div>
+                </div>
+
+                <group>
+                    <group name="left">
+                        <field name="model_type_id" />
+                    </group>
+                    <group name="right">
+                        <field name="date" />
+                        <field name="active" />
+                    </group>
+                </group>
+                <notebook>
+                    <page
+                        name="page_note"
+                        string="Notes"
+                    >
+                        <field name="notes" nolabel="1" />
+                    </page>
+                    <page string="Reviews" name="tier_validation">
+                        <group>
+                            <field name="definition_id"/>
+                            <field name="reviewer_partner_ids" widget="many2many_tags"/>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+            <field
+                name="review_ids"
+                widget="tier_validation"
+                attrs="{'invisible':[('review_ids', '=', [])]}"
+                nolabel="1"
+            />
+            </form>
+        </field>
+    </record>
+
+    <record id="dev_model_view_action" model="ir.actions.act_window">
+        <field name="name">Development Model</field>
+        <field name="res_model">dev.model</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_dev_model"
+        parent="menu_dev_root"
+        action="dev_model_view_action"
+    />
+    </data>
+</openerp>
