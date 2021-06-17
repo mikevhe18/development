@@ -24,8 +24,8 @@
                 <header>
                     <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>
                     <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible':[('state','!=','open')]}"/>
-                    <button name="%(ssi_cancel_state.base_cancel_reason_wizard_action)d" type="action" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
-                    <button name="%(ssi_terminate_state.base_terminate_reason_wizard_action)d" type="action" string="Terminate" class="oe_highlight" attrs="{'invisible':[('state','=','terminate')]}"/>
+                    <button name="%(base_cancel_reason.base_cancel_reason_wizard_action)d" type="action" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
+                    <button name="%(base_terminate_reason.base_terminate_reason_wizard_action)d" type="action" string="Terminate" class="oe_highlight" attrs="{'invisible':[('state','=','terminate')]}"/>
                     <button name="request_validation"
                         string="Request Validation"
                         attrs="{'invisible': ['|','|',('need_validation', '!=', True),('rejected','=',True),('state','not in',['confirm'])]}"
@@ -80,12 +80,12 @@
                             <field name="name"/>
                         </h1>
                         <h2 attrs="{'invisible': [('state', '!=', 'cancel')]}">
-                            <label for="reason" string="Cancellation reason:"/>
-                            <field name="reason" class="oe_inline" widget="text"/>
+                            <label for="cancel_reason_id" string="Cancellation reason:"/>
+                            <field name="cancel_reason_id" class="oe_inline"/>
                         </h2>
                         <h2 attrs="{'invisible': [('state', '!=', 'terminate')]}">
-                            <label for="terminate_reason" string="Termination reason:"/>
-                            <field name="terminate_reason" class="oe_inline" widget="text"/>
+                            <label for="terminate_reason_id" string="Termination reason:"/>
+                            <field name="terminate_reason_id" class="oe_inline"/>
                         </h2>
                     </div>
                 </div>
@@ -93,6 +93,8 @@
                 <group>
                     <group name="left">
                         <field name="model_type_id" />
+                        <field name="partner_id" />
+                        <field name="value" />
                     </group>
                     <group name="right">
                         <field name="date" />
@@ -124,15 +126,31 @@
         </field>
     </record>
 
+    <record id="dev_model_view_search" model="ir.ui.view">
+        <field name="name">dev.model.search</field>
+        <field name="model">dev.model</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Partner" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="dev_model_view_action" model="ir.actions.act_window">
         <field name="name">Development Model</field>
         <field name="res_model">dev.model</field>
+        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="dev_model_view_search"/>
     </record>
 
     <menuitem
         id="menu_dev_model"
-        parent="menu_dev_root"
+        parent="development_model.menu_development"
         action="dev_model_view_action"
     />
     </data>

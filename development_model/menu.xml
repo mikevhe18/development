@@ -8,6 +8,19 @@
     <menuitem
         id="menu_dev_root"
         name="Development"
+        sequence="1"
+    />
+    <menuitem
+        id="menu_development"
+        name="Development"
+        parent="menu_dev_root"
+        sequence="1"
+    />
+    <menuitem
+        id="menu_development_config"
+        name="Configuration"
+        parent="menu_dev_root"
+        sequence="2"
     />
 
     </data>

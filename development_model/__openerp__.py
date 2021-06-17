@@ -1,5 +1,5 @@
-# Copyright 2020 OpenSynergy Indonesia
-# Copyright 2020 PT. Simetri Sinergi Indonesia
+# Copyright 2021 OpenSynergy Indonesia
+# Copyright 2021 PT. Simetri Sinergi Indonesia
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
     "name": "Development Model for Tester",
@@ -13,8 +13,8 @@
     "depends": [
         "base_multiple_approval",
         "base_sequence_configurator",
-        "base_cancel_state",
-        "base_terminate_state",
+        "base_cancel_reason",
+        "base_terminate_reason",
     ],
     "data": [
         "security/ir.model.access.csv",

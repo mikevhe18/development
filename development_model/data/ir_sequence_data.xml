@@ -2,7 +2,15 @@
 <!-- Copyright 2021 OpenSynergy Indonesia
      Copyright 2021 PT. Simetri Sinergi Indonesia
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+
 <openerp>
+    <data>
+        <record id="sequence_type_dev_model" model="ir.sequence.type">
+            <field name="name">Development Model</field>
+            <field name="code">dev.model</field>
+        </record>
+    </data>
+
     <data noupdate="1">
         <record id="sequence_dev_model" model="ir.sequence">
             <field name="name">Development Model</field>

@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from openerp import api, fields, models
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 
 class DevModelType(models.Model):
@@ -15,6 +16,14 @@ class DevModelType(models.Model):
     )
     code = fields.Char(
         string="Code",
+    )
+    partner_id = fields.Many2one(
+        string="Partner",
+        comodel_name="res.partner",
+    )
+    value = fields.Float(
+        string="Value",
+        digits_compute=dp.get_precision("Account"),
     )
     sequence_id = fields.Many2one(
         string="Sequence",

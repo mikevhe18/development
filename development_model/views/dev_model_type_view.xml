@@ -32,6 +32,8 @@
                         <field name="sequence_id" />
                     </group>
                     <group name="right">
+                        <field name="partner_id" />
+                        <field name="value" />
                         <field name="active" />
                     </group>
                 </group>
@@ -48,15 +50,27 @@
         </field>
     </record>
 
+    <record id="dev_model_type_view_search" model="ir.ui.view">
+        <field name="name">dev.model.search</field>
+        <field name="model">dev.model</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
     <record id="dev_model_type_action" model="ir.actions.act_window">
         <field name="name">Development Type Model</field>
         <field name="res_model">dev.model.type</field>
+        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="dev_model_type_view_search"/>
     </record>
 
     <menuitem
         id="menu_dev_model_type"
-        parent="menu_dev_root"
+        parent="development_model.menu_development_config"
         action="dev_model_type_action"
     />
     </data>

@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from openerp import api, fields, models
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 
 class DevModel(models.Model):
@@ -29,6 +30,10 @@ class DevModel(models.Model):
         default="/",
         required=True,
     )
+    partner_id = fields.Many2one(
+        string="Partner",
+        comodel_name="res.partner",
+    )
     model_type_id = fields.Many2one(
         string="Type",
         comodel_name="dev.model.type",
@@ -40,6 +45,10 @@ class DevModel(models.Model):
         states={'draft': [('readonly', False)]},
         copy=False,
         default=fields.Date.context_today
+    )
+    value = fields.Float(
+        string="Value",
+        digits_compute=dp.get_precision("Account"),
     )
     active = fields.Boolean(
         string="Active",
@@ -60,6 +69,22 @@ class DevModel(models.Model):
         ],
         default="draft",
     )
+
+    @api.onchange(
+        "model_type_id",
+    )
+    def onchange_partner_id(self):
+        self.partner_id = False
+        if self.model_type_id:
+            self.partner_id = self.model_type_id.partner_id
+
+    @api.onchange(
+        "model_type_id",
+    )
+    def onchange_value(self):
+        self.value = 0.0
+        if self.model_type_id:
+            self.value = self.model_type_id.value
 
     @api.model
     def create(self, values):
