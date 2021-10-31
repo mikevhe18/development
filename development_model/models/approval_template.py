@@ -5,11 +5,11 @@
 from odoo import api, models
 
 
-class TierDefinition(models.Model):
-    _inherit = "tier.definition"
+class ApprovalTemplate(models.Model):
+    _inherit = "approval.template"
 
     @api.model
-    def _get_tier_validation_model_names(self):
-        res = super(TierDefinition, self)._get_tier_validation_model_names()
+    def _get_multiple_approval_model_names(self):
+        res = super(ApprovalTemplate, self)._get_multiple_approval_model_names()
         res.append("dev.model")
         return res

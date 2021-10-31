@@ -10,17 +10,14 @@ class DevModel(models.Model):
     _name = "dev.model"
     _description = "Development Model"
     _inherit = [
-        "tier.validation.mixin",
-        "sequence.configurator.mixin",
-        "cancel.state.mixin",
-        "terminate.state.mixin",
+        "mixin.multiple_approval",
         "mail.thread",
     ]
-    _state_from = [
+    _approval_state_from = [
         "draft",
         "confirm"
     ]
-    _state_to = [
+    _approval_state_to = [
         "open",
     ]
 
@@ -61,20 +58,10 @@ class DevModel(models.Model):
         default="draft",
     )
 
-    @api.model
-    def create(self, values):
-        _super = super(DevModel, self)
-        result = _super.create(values)
-        sequence = result._create_sequence()
-        result.write({
-            "name": sequence,
-        })
-        return result
-
     def action_confirm(self):
         for document in self:
             document.write({"state": "confirm"})
-            document.request_validation()
+            document.action_request_approval()
 
     def action_open(self):
         for document in self:
@@ -84,9 +71,17 @@ class DevModel(models.Model):
         for document in self:
             document.write({"state": "done"})
 
-    def validate_tier(self):
-        _super = super(DevModel, self)
-        _super.validate_tier()
+    def action_cancel(self):
         for document in self:
-            if document.validated:
+            document.write({"state": "cancel"})
+
+    def action_restart(self):
+        for document in self:
+            document.write({"state": "draft"})
+
+    def action_approve_approval(self):
+        _super = super(DevModel, self)
+        _super.action_approve_approval()
+        for document in self:
+            if document.approved:
                 document.action_open()
