@@ -4,5 +4,4 @@
 from . import (
     dev_model_type,
     dev_model,
-    approval_template,
 )
