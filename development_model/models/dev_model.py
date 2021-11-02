@@ -13,13 +13,9 @@ class DevModel(models.Model):
         "mixin.multiple_approval",
         "mail.thread",
     ]
-    _approval_state_from = [
-        "draft",
-        "confirm"
-    ]
-    _approval_state_to = [
-        "open",
-    ]
+    _approval_from_state = "draft"
+    _approval_to_state = "open"
+    _approval_state = "confirm"
 
     name = fields.Char(
         string="# Document",
@@ -54,6 +50,7 @@ class DevModel(models.Model):
             ("done", "Finished"),
             ("cancel", "Cancelled"),
             ("terminate", "Terminated"),
+            ("reject", "Rejected"),
         ],
         default="draft",
     )

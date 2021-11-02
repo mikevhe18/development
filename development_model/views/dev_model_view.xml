@@ -22,22 +22,18 @@
                 <header>
                     <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>
                     <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible':[('state','!=','open')]}"/>
-                    <button name="action_cancel" type="object" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
-                    <button name="action_restart" type="object" string="Restart" class="oe_highlight" attrs="{'invisible':[('state','!=','cancel')]}"/>
+                    <button name="action_cancel" type="object" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','in',['cancel','reject'])]}"/>
+                    <button name="action_restart" type="object" string="Restart" class="oe_highlight" attrs="{'invisible':[('state','not in',['cancel','reject'])]}"/>
                     <button name="action_request_approval"
                         string="Request Approval"
                         attrs="{'invisible': ['|','|',('need_validation', '!=', True),('rejected','=',True),('state','not in',['confirm'])]}"
                         type="object"/>
-                    <button name="action_restart_approval"
-                        string="Restart Approval"
-                        attrs="{'invisible': ['|','|',('approval_ids', '=', []),('rejected','=',False),('state','not in',['confirm'])]}"
-                        type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,open,done"/>
                 </header>
                 <sheet>
-                <field name="need_validation" invisible="1"/>
-                <field name="approved" invisible="1"/>
-                <field name="rejected" invisible="1"/>
+                <field name="need_validation" invisible="0"/>
+                <field name="approved" invisible="0"/>
+                <field name="rejected" invisible="0"/>
                 <div role="alert" class="alert alert-warning"
                      attrs="{'invisible': ['|', '|', '|',
                      ('approved', '=', True), ('state', 'not in', ['confirm']),
@@ -98,7 +94,7 @@
                     </page>
                     <page string="Approvals" name="tier_validation">
                         <group>
-                            <field name="template_id"/>
+                            <field name="approval_template_id"/>
                             <field name="active_approver_partner_ids" widget="many2many_tags"/>
                         </group>
                         <field
