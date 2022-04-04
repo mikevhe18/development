@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2020 OpenSynergy Indonesia
      Copyright 2020 PT. Simetri Sinergi Indonesia
-     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
 <odoo>
     <record id="dev_model_view_tree" model="ir.ui.view">
         <field name="name">dev.model.tree</field>
         <field name="model">dev.model</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="name" />
-                <field name="active" />
+            <tree
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'done'"
+                    decoration-muted="state == 'cancel'"
+                >
+                    <field name="id" optional="hide" />
+                    <field name="display_name" string="# Document" />
+                    <field name="model_type_id"/>
+                    <field name="date"/>
+                    <field
+                            name="state"
+                            widget="badge"
+                            decoration-info="state == 'draft'"
+                            decoration-success="state == 'done'"
+                            decoration-muted="state == 'cancel'"
+                        />
             </tree>
         </field>
     </record>
@@ -20,104 +33,133 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>
-                    <button name="action_done" type="object" string="Done" class="oe_highlight" attrs="{'invisible':[('state','!=','open')]}"/>
-                    <button name="%(ssi_cancel_state.base_cancel_reason_wizard_action)d" type="action" string="Cancel" class="oe_highlight" attrs="{'invisible':[('state','=','cancel')]}"/>
-                    <button name="%(ssi_terminate_state.base_terminate_reason_wizard_action)d" type="action" string="Terminate" class="oe_highlight" attrs="{'invisible':[('state','=','terminate')]}"/>
-                    <button name="request_validation"
-                        string="Request Validation"
-                        attrs="{'invisible': ['|','|',('need_validation', '!=', True),('rejected','=',True),('state','not in',['confirm'])]}"
-                        type="object"/>
-                    <button name="restart_validation"
-                        string="Restart Validation"
-                        attrs="{'invisible': ['|','|',('review_ids', '=', []),('rejected','=',False),('state','not in',['confirm'])]}"
-                        type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,open,done"/>
-                </header>
-                <sheet>
-                <field name="need_validation" invisible="1"/>
-                <field name="validated" invisible="1"/>
-                <field name="rejected" invisible="1"/>
-                <div role="alert" class="alert alert-warning"
-                     attrs="{'invisible': ['|', '|', '|',
-                     ('validated', '=', True), ('state', 'not in', ['confirm']),
-                     ('rejected', '=', True), ('review_ids', '=', [])]}"
-                     style="margin-bottom:0px;">
-                    <p><i class="fa fa-info-circle"/>This Record needs to be
-                        validated.
-                        <button name="validate_tier"
-                            string="Validate"
-                            attrs="{'invisible': [('review_ids', '=', [])]}"
+                    <button
+                            name="action_confirm"
+                            string="Confirm"
                             type="object"
-                            class="oe_inline oe_button btn-success"
-                            icon="fa-check"/>
-                        <button name="reject_tier"
+                            class="oe_highlight"
+                            confirm="Confirm data. Are you sure?"
+                            attrs="{'invisible':[('confirm_ok','!=',True)]}"
+                        />
+                    <button
+                            name="action_approve_approval"
+                            string="Approve"
+                            type="object"
+                            class="oe_highlight"
+                            confirm="Approve data. Are you sure?"
+                            attrs="{'invisible':[('approve_ok','!=',True)]}"
+                        />
+                    <button
+                            name="action_reject_approval"
                             string="Reject"
                             type="object"
-                            class="btn-icon btn-danger"
-                            icon="fa-stop"/>
-                    </p>
-                </div>
-                <div role="alert" class="alert alert-success"
-                     attrs="{'invisible': ['|', '|', ('validated', '!=', True), ('state', 'not in', ['confirm']), ('review_ids', '=', [])]}"
-                     style="margin-bottom:0px;">
-                    <p><i class="fa fa-thumbs-up"/> Operation has been <b>validated</b>!</p>
-                </div>
-                <div role="alert" class="alert alert-danger"
-                     attrs="{'invisible': ['|', '|', ('rejected', '!=', True), ('state', 'not in', ['confirm']), ('review_ids', '=', [])]}"
-                     style="margin-bottom:0px;">
-                    <p><i class="fa fa-thumbs-down"/> Operation has been <b>rejected</b>.</p>
-                </div>
-
-                <div name="div_smart_buttons" class="oe_right oe_button_box">
-                </div>
-                <div class="oe_left" style="width: 500px;">
-                    <div class="oe_title" style="width: 500px;">
-                        <label for="name"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                        <h2 attrs="{'invisible': [('state', '!=', 'cancel')]}">
-                            <label for="reason" string="Cancellation reason:"/>
-                            <field name="reason" class="oe_inline" widget="text"/>
-                        </h2>
-                        <h2 attrs="{'invisible': [('state', '!=', 'terminate')]}">
-                            <label for="terminate_reason" string="Termination reason:"/>
-                            <field name="terminate_reason" class="oe_inline" widget="text"/>
-                        </h2>
+                            confirm="Reject data. Are you sure?"
+                            attrs="{'invisible':[('reject_ok','!=',True)]}"
+                        />
+                    <button
+                            name="%(ssi_transaction_cancel_mixin.base_select_cancel_reason_action)d"
+                            string="Cancel"
+                            type="action"
+                            attrs="{'invisible':[('cancel_ok','!=',True)]}"
+                        />
+                    <button
+                            name="action_restart"
+                            string="Restart"
+                            type="object"
+                            confirm="Restart data. Are you sure?"
+                            attrs="{'invisible':[('restart_ok','!=',True)]}"
+                        />
+                    <button
+                            name="action_done"
+                            string="Done"
+                            type="object"
+                            class="oe_highlight"
+                            confirm="Finished data. Are you sure?"
+                            attrs="{'invisible':[('done_ok','!=',True)]}"
+                        />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,open,done"/>
+                </header>
+                <field name="need_validation" invisible="1" />
+                <field name="approved" invisible="1" />
+                <field name="rejected" invisible="1" />
+                <sheet>
+                    <div
+                            class="oe_right oe_button_box"
+                            style="width: 300px;"
+                            name="buttons"
+                        >
                     </div>
-                </div>
+                    <div class="oe_left" style="width: 500px;">
+                        <div class="oe_title" style="width: 500px;">
+                            <label for="name" />
+                            <h1>
+                                <field
+                                        name="name"
+                                        class="oe_edit_only"
+                                        attrs="{'readonly':[('manual_number_ok','=',False)]}"
+                                    />
+                                <field name="display_name" class="oe_read_only" />
+                            </h1>
+                            <h2 attrs="{'invisible': [('state', '!=', 'cancel')]}">
+                                <label
+                                        for="cancel_reason_id"
+                                        string="Cancellation reason:"
+                                    />
+                                <field name="cancel_reason_id" class="oe_inline" />
+                            </h2>
+                        </div>
+                    </div>
 
-                <group>
-                    <group name="left">
-                        <field name="model_type_id" />
-                    </group>
-                    <group name="right">
-                        <field name="date" />
-                        <field name="active" />
-                    </group>
-                </group>
-                <notebook>
-                    <page
-                        name="page_note"
-                        string="Notes"
-                    >
-                        <field name="notes" nolabel="1" />
-                    </page>
-                    <page string="Reviews" name="tier_validation">
-                        <group>
-                            <field name="definition_id"/>
-                            <field name="reviewer_partner_ids" widget="many2many_tags"/>
+                    <group>
+                        <group name="left">
+                            <field name="model_type_id" />
                         </group>
-                    </page>
-                </notebook>
+                        <group name="right">
+                            <field name="date" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page
+                            name="page_note"
+                            string="Notes"
+                        >
+                            <field name="note" nolabel="1" />
+                        </page>
+                        <page string="Approvals" name="multiple_approval">
+                            <group name="grp_multiple_approval_1">
+                                <field name="approval_template_id" />
+                                <field
+                                        name="active_approver_partner_ids"
+                                        widget="many2many_tags"
+                                    />
+                            </group>
+                            <field
+                                    name="approval_ids"
+                                    attrs="{'invisible':[('approval_ids', '=', [])]}"
+                                    nolabel="1"
+                                />
+                        </page>
+                        <page name="policy" string="Policies" groups="base.group_system">
+                            <group name="policy_1" colspan="4" col="2">
+                                <field name="policy_template_id" />
+                                <button
+                                        name="action_reload_policy_template"
+                                        type="object"
+                                        string="Reload Template Policy"
+                                        class="oe_highlight"
+                                        icon="fa-refresh"
+                                    />
+                                <field name="confirm_ok" />
+                                <field name="approve_ok" />
+                                <field name="done_ok" />
+                                <field name="reject_ok" />
+                                <field name="cancel_ok" />
+                                <field name="restart_ok" />
+                                <field name="manual_number_ok" />
+                            </group>
+                        </page>
+                    </notebook>
             </sheet>
-            <field
-                name="review_ids"
-                widget="tier_validation"
-                attrs="{'invisible':[('review_ids', '=', [])]}"
-                nolabel="1"
-            />
             </form>
         </field>
     </record>

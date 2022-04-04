@@ -1,6 +1,6 @@
-.. image:: https://img.shields.io/badge/license-AGPL--3-blue.png
-   :target: https://www.gnu.org/licenses/agpl
-   :alt: License: AGPL-3
+.. image:: https://img.shields.io/badge/license-LGPL--3-blue.png
+   :target: https://www.gnu.org/licenses/lgpl
+   :alt: License: LGPL-3
 
 ============================
 Development Model for Tester
@@ -28,6 +28,6 @@ Maintainer
 
 .. image:: https://simetri-sinergi.id/logo.png
    :alt: PT. Simetri Sinergi Indonesia
-   :target: https://simetri-sinergi.id.com
+   :target: https://simetri-sinergi.id
 
 This module is maintained by the PT. Simetri Sinergi Indonesia.

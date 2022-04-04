@@ -1,16 +1,18 @@
 <?xml version="1.0"?>
 <!-- Copyright 2020 OpenSynergy Indonesia
      Copyright 2020 PT. Simetri Sinergi Indonesia
-     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
 <odoo>
     <data noupdate="1">
         <record id="sequence_dev_model" model="ir.sequence">
             <field name="name">Development Model</field>
             <field name="code">dev.model</field>
-            <field name="padding">5</field>
             <field name="prefix">DEV-MOD/%(year)s/</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
+            <field eval="1" name="number_next" />
+            <field eval="1" name="number_increment" />
+            <field name="padding" eval="6" />
+            <field name="use_date_range" eval="1" />
+            <field eval="False" name="company_id" />
         </record>
     </data>
 </odoo>
