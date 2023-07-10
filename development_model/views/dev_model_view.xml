@@ -112,13 +112,24 @@
 
                     <group>
                         <group name="left">
+                            <field name="number" />
                             <field name="model_type_id" />
+                            <field name="date_time" />
+                            <field name="create_date" />
                         </group>
                         <group name="right">
                             <field name="date" />
+                            <field name="user_id" />
+                            <field name="partner_id" />
                         </group>
                     </group>
                     <notebook>
+                        <page
+                            name="page_detail"
+                            string="Details"
+                        >
+                            <field name="detail_ids" nolabel="1" />
+                        </page>
                         <page
                             name="page_note"
                             string="Notes"
@@ -128,6 +139,13 @@
                         <page string="Approvals" name="multiple_approval">
                             <group name="grp_multiple_approval_1">
                                 <field name="approval_template_id" />
+                                <button
+                                        name="action_reload_approval_template"
+                                        string="Reload Template"
+                                        class="oe_highlight"
+                                        type="object"
+                                    />
+                                <newLine />
                                 <field
                                         name="active_approver_partner_ids"
                                         widget="many2many_tags"
@@ -158,8 +176,51 @@
                                 <field name="manual_number_ok" />
                             </group>
                         </page>
+                        <page name="custom_information" string="Custom Information">
+                            <group name="custom_info">
+                                <field name="custom_info_template_id" />
+                                <button
+                                            name="action_reload_custom_info_template"
+                                            string="Reload Custom Info Template"
+                                            type="object"
+                                        />
+                                <button
+                                            name="action_reload_custom_info"
+                                            string="Reload Custom Info"
+                                            type="object"
+                                        />
+                            </group>
+                            <group name="detail_info" colspan="4" col="2">
+                                <field name="custom_info_ids" colspan="4" nolabel="1" />
+                            </group>
+                        </page>
+                        <page name="status_check" string="Check Status">
+                            <group name="status_check_1" colspan="4" col="2">
+                                <field name="status_check_template_id" />
+                                <button
+                                    name="action_reload_status_check_template"
+                                    string="Reload Status Check Template"
+                                    type="object"
+                                />
+                                <button
+                                    name="action_reload_status_check"
+                                    string="Reload Status Check Item"
+                                    type="object"
+                                />
+                                <field name="state_change_constrain_template_id" />
+                            </group>
+                            <field name="status_check_ids" nolabel="1" />
+                        </page>
                     </notebook>
             </sheet>
+            <div class="oe_chatter">
+                <field
+                        name="message_follower_ids"
+                        widget="mail_followers"
+                        groups="base.group_user"
+                    />
+                <field name="message_ids" widget="mail_thread" />
+            </div>
             </form>
         </field>
     </record>
