@@ -3,3 +3,5 @@ access_dev_model_employee,access.dev.model,model_dev_model,base.group_user,1,1,1
 access_dev_model_all,access.dev.model,model_dev_model,,1,0,0,0
 access_dev_model_type_employee,access.dev.model.type,model_dev_model_type,base.group_user,1,1,1,1
 access_dev_model_type_all,access.dev.model.type,model_dev_model_type,,1,0,0,0
+access_dev_model_detail_employee,access.dev.model.detail,model_dev_model_detail,base.group_user,1,1,1,1
+access_dev_model_detail_all,access.dev.model.detail,model_dev_model_detail,,1,0,0,0
